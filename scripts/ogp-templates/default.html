@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      width: 1200px;
+      height: 630px;
+      font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+      background: #0c0c0c;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .terminal-window {
+      width: 100%;
+      height: 100%;
+      background: #0c0c0c;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .terminal-header {
+      background: #2d2d2d;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      gap: 10px;
+    }
+    
+    .terminal-button {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+    }
+    
+    .terminal-button.close {
+      background: #ff5f56;
+    }
+    
+    .terminal-button.minimize {
+      background: #ffbd2e;
+    }
+    
+    .terminal-button.maximize {
+      background: #27c93f;
+    }
+    
+    .terminal-title {
+      flex: 1;
+      text-align: center;
+      color: #999;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    
+    .terminal-body {
+      flex: 1;
+      background: #0c0c0c;
+      padding: 40px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .ascii-art {
+      color: #50fa7b;
+      font-size: 16px;
+      line-height: 1.2;
+      margin-bottom: 30px;
+      white-space: pre;
+      font-weight: normal;
+      font-family: 'Courier New', monospace;
+    }
+    
+    .main-title {
+      color: #f8f8f2;
+      font-size: 48px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
+    .prompt-line {
+      color: #999;
+      font-size: 20px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .prompt-symbol {
+      color: #50fa7b;
+    }
+    
+    .command {
+      color: #8be9fd;
+    }
+    
+    .output {
+      color: #f1fa8c;
+      font-size: 24px;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .url {
+      color: #666;
+      font-size: 18px;
+      text-align: center;
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="terminal-window">
+    <div class="terminal-header">
+      <div class="terminal-button close"></div>
+      <div class="terminal-button minimize"></div>
+      <div class="terminal-button maximize"></div>
+      <div class="terminal-title">user@blog:~</div>
+    </div>
+    <div class="terminal-body">
+      <pre class="ascii-art">   ____  _             
+  | __ )| | ___   __ _ 
+  |  _ \| |/ _ \ / _` |
+  | |_) | | (_) | (_| |
+  |____/|_|\___/ \__, |
+                 |___/ </pre>
+      <h1 class="main-title">Tech Blog</h1>
+      <div class="prompt-line">
+        <span class="prompt-symbol">❯</span>
+        <span class="command">echo "プログラミングと技術のブログ"</span>
+      </div>
+      <div class="output">プログラミングと技術のブログ</div>
+      <div class="url">blog</div>
+    </div>
+  </div>
+</body>
+</html>
