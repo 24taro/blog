@@ -40,6 +40,6 @@ export const router = createBrowserRouter(
     },
   ],
   {
-    basename: '/blog', // GitHub Pages用のベースパス
+    basename: '/', // ルートパス
   },
 )

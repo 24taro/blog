@@ -1,15 +1,15 @@
-import { format } from "date-fns";
-import { ja } from "date-fns/locale";
-import { Link } from "react-router-dom";
-import { getTagsByIds } from "../lib/tags";
-import type { BlogPost } from "../types/blog";
+import { format } from 'date-fns'
+import { ja } from 'date-fns/locale'
+import { Link } from 'react-router-dom'
+import { getTagsByIds } from '../lib/tags'
+import type { BlogPost } from '../types/blog'
 
 interface PostCardProps {
-  post: BlogPost;
+  post: BlogPost
 }
 
 export default function PostCard({ post }: PostCardProps) {
-  const postTags = getTagsByIds(post.tags);
+  const postTags = getTagsByIds(post.tags)
 
   return (
     <Link
@@ -20,7 +20,7 @@ export default function PostCard({ post }: PostCardProps) {
         <div className="flex-1 flex flex-col">
           <div className="flex items-center gap-3 mb-2">
             <time className="text-xs text-gray-500">
-              {format(new Date(post.publishedAt), "yyyy年M月d日", {
+              {format(new Date(post.publishedAt), 'yyyy年M月d日', {
                 locale: ja,
               })}
             </time>
@@ -43,9 +43,7 @@ export default function PostCard({ post }: PostCardProps) {
           <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors line-clamp-2">
             {post.title}
           </h3>
-          <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
-            {post.excerpt}
-          </p>
+          <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">{post.excerpt}</p>
         </div>
 
         <div className="ml-4 flex-shrink-0 self-center">
@@ -56,15 +54,10 @@ export default function PostCard({ post }: PostCardProps) {
             viewBox="0 0 24 24"
             aria-hidden="true"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5l7 7-7 7"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </div>
       </div>
     </Link>
-  );
+  )
 }

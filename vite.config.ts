@@ -27,5 +27,5 @@ export default defineConfig({
       }
     }
   ],
-  base: '/blog/', // GitHub Pages用のベースパス
+  base: '/', // ルートパス
 })

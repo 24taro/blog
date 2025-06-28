@@ -1,29 +1,26 @@
-import { format } from "date-fns";
-import { ja } from "date-fns/locale";
-import { Link, Navigate, useParams } from "react-router-dom";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
-import MarkdownRenderer from "../components/MarkdownRenderer";
-import { MetaTags } from "../components/MetaTags";
-import { getPostBySlug } from "../lib/posts";
-import { getTagsByIds } from "../lib/tags";
+import { format } from 'date-fns'
+import { ja } from 'date-fns/locale'
+import { Link, Navigate, useParams } from 'react-router-dom'
+import Footer from '../components/Footer'
+import Header from '../components/Header'
+import MarkdownRenderer from '../components/MarkdownRenderer'
+import { MetaTags } from '../components/MetaTags'
+import { getPostBySlug } from '../lib/posts'
+import { getTagsByIds } from '../lib/tags'
 
 export default function PostDetail() {
-  const { slug } = useParams<{ slug: string }>();
-  const post = getPostBySlug(slug!);
+  const { slug } = useParams<{ slug: string }>()
+  const post = getPostBySlug(slug!)
 
   if (!post) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/" replace />
   }
 
-  const postTags = getTagsByIds(post.tags);
+  const postTags = getTagsByIds(post.tags)
 
   return (
     <div className="min-h-screen flex flex-col">
-      <MetaTags
-        post={post}
-        url={`https://24taro.github.io/blog/posts/${post.slug}`}
-      />
+      <MetaTags post={post} url={`https://24taro.github.io/blog/posts/${post.slug}`} />
       <Header />
 
       <main className="flex-1 max-w-3xl w-full mx-auto px-4 sm:px-6 py-8">
@@ -40,20 +37,16 @@ export default function PostDetail() {
                 </Link>
               ))}
               <time className="text-sm text-gray-500 ml-auto">
-                {format(new Date(post.publishedAt), "yyyy年M月d日", {
+                {format(new Date(post.publishedAt), 'yyyy年M月d日', {
                   locale: ja,
                 })}
               </time>
             </div>
 
-            <h1 className="text-4xl font-extrabold text-gray-900 mb-4">
-              {post.title}
-            </h1>
+            <h1 className="text-4xl font-extrabold text-gray-900 mb-4">{post.title}</h1>
 
             {post.excerpt && (
-              <p className="text-xl text-gray-600 leading-relaxed">
-                {post.excerpt}
-              </p>
+              <p className="text-xl text-gray-600 leading-relaxed">{post.excerpt}</p>
             )}
           </header>
 
@@ -63,8 +56,7 @@ export default function PostDetail() {
 
           {post.updatedAt && (
             <div className="mt-8 pt-4 border-t border-gray-200 text-sm text-gray-500">
-              最終更新:{" "}
-              {format(new Date(post.updatedAt), "yyyy年M月d日", { locale: ja })}
+              最終更新: {format(new Date(post.updatedAt), 'yyyy年M月d日', { locale: ja })}
             </div>
           )}
         </article>
@@ -81,6 +73,7 @@ export default function PostDetail() {
               stroke="currentColor"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -95,5 +88,5 @@ export default function PostDetail() {
 
       <Footer />
     </div>
-  );
+  )
 }
