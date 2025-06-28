@@ -76,7 +76,5 @@ export function getTagById(id: string): Tag | undefined {
 
 // 複数のIDからタグを取得
 export function getTagsByIds(ids: string[]): Tag[] {
-  return ids
-    .map((id) => getTagById(id))
-    .filter((tag): tag is Tag => tag !== undefined)
+  return ids.map((id) => getTagById(id)).filter((tag): tag is Tag => tag !== undefined)
 }

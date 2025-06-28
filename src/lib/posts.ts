@@ -53,7 +53,7 @@ export function getPostsByTag(tag: string): BlogPost[] {
 // 複数のタグのいずれかを持つ記事を取得
 export function getPostsByTags(tags: string[]): BlogPost[] {
   if (tags.length === 0) return getAllPosts()
-  
+
   return posts
     .filter((post) => tags.some((tag) => post.tags.includes(tag)))
     .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
@@ -62,7 +62,7 @@ export function getPostsByTags(tags: string[]): BlogPost[] {
 // すべてのタグを持つ記事を取得
 export function getPostsByAllTags(tags: string[]): BlogPost[] {
   if (tags.length === 0) return getAllPosts()
-  
+
   return posts
     .filter((post) => tags.every((tag) => post.tags.includes(tag)))
     .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())

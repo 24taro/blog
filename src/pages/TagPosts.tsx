@@ -2,13 +2,13 @@ import { Navigate, useParams } from 'react-router-dom'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
 import PostList from '../components/PostList'
-import { getTagById } from '../lib/tags'
 import { getPostsByTag } from '../lib/posts'
+import { getTagById } from '../lib/tags'
 
 export default function TagPosts() {
   const { tagId } = useParams<{ tagId: string }>()
   const tag = getTagById(tagId!)
-  
+
   if (!tag) {
     return <Navigate to="/" replace />
   }
@@ -29,9 +29,7 @@ export default function TagPosts() {
               {tag.name}
             </span>
           </div>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            「{tag.name}」タグの記事一覧
-          </p>
+          <p className="text-gray-600 max-w-2xl mx-auto">「{tag.name}」タグの記事一覧</p>
         </section>
 
         <PostList

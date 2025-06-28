@@ -13,7 +13,7 @@ export default function PostList({
   emptyMessage = '記事が見つかりませんでした。',
 }: PostListProps) {
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6">
+    <div>
       {title && <h2 className="text-3xl font-bold text-gray-900 mb-8">{title}</h2>}
 
       {posts.length > 0 ? (

@@ -5,8 +5,8 @@ import Footer from '../components/Footer'
 import Header from '../components/Header'
 import MarkdownRenderer from '../components/MarkdownRenderer'
 import { MetaTags } from '../components/MetaTags'
-import { getTagsByIds } from '../lib/tags'
 import { getPostBySlug } from '../lib/posts'
+import { getTagsByIds } from '../lib/tags'
 
 export default function PostDetail() {
   const { slug } = useParams<{ slug: string }>()

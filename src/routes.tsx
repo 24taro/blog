@@ -1,9 +1,9 @@
 import { Outlet, createBrowserRouter } from 'react-router-dom'
 import ScrollToTop from './components/ScrollToTop'
 import Home from './pages/Home'
+import NewPost from './pages/NewPost'
 import PostDetail from './pages/PostDetail'
 import TagPosts from './pages/TagPosts'
-import NewPost from './pages/NewPost'
 
 function Layout() {
   return (

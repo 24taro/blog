@@ -37,17 +37,21 @@ export default function PostCard({ post }: PostCardProps) {
               )}
             </div>
           </div>
-          
+
           <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors line-clamp-2">
             {post.title}
           </h3>
-          <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
-            {post.excerpt}
-          </p>
+          <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">{post.excerpt}</p>
         </div>
-        
+
         <div className="ml-4 flex-shrink-0 self-center">
-          <svg className="w-5 h-5 text-gray-400 group-hover:text-gray-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            className="w-5 h-5 text-gray-400 group-hover:text-gray-600 transition-colors"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </div>

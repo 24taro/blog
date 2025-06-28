@@ -21,36 +21,64 @@
 
 ### 技術スタック
 
-- **フレームワーク**: React 19 + TypeScript
-- **ビルドツール**: Vite
-- **スタイリング**: TailwindCSS
+- **フレームワーク**: React 19 + TypeScript 5.8
+- **ビルドツール**: Vite 6.3
+- **スタイリング**: TailwindCSS 3.4
 - **ルーティング**: React Router v7
-- **Markdown 処理**: react-markdown
-- **検索**: Fuse.js（クライアントサイド全文検索）
-- **コードフォーマッター**: Biome
+- **Markdown 処理**: react-markdown 9
+- **検索**: Fuse.js 7.0（クライアントサイド全文検索）
+- **日付処理**: date-fns 4.1
+- **コードフォーマッター**: Biome 1.9
 - **ホスティング**: GitHub Pages
 - **CI/CD**: GitHub Actions
-- **OGP画像生成**: Puppeteer
+- **OGP画像生成**: Puppeteer 24
+- **パッケージマネージャー**: pnpm 10.10
 
 ### プロジェクト構造
 
 ```
 blog/
-├── .github/workflows/   # GitHub Actions設定
-├── posts/              # 記事JSONファイル
-├── public/             # 静的ファイル
-│   └── ogp/           # OGP画像
-├── scripts/            # ビルドスクリプト
-│   ├── ogp-templates/  # OGPテンプレート
-│   └── generate-ogp.js # OGP画像生成スクリプト
+├── .claude/commands/     # カスタムスラッシュコマンド
+├── .github/workflows/    # GitHub Actions設定
+│   └── deploy.yml       # 自動デプロイ設定
+├── posts/               # 記事JSONファイル
+│   └── hello-world.json # サンプル記事
+├── public/              # 静的ファイル
+│   └── ogp/            # OGP画像
+│       ├── default.png  # デフォルトOGP画像
+│       └── *.png       # 記事別OGP画像
+├── scripts/             # ビルドスクリプト
+│   ├── ogp-templates/   # OGPテンプレート
+│   │   ├── article.html # 記事用テンプレート
+│   │   └── default.html # デフォルト用
+│   └── generate-ogp.js  # OGP画像生成スクリプト
 ├── src/
-│   ├── components/     # Reactコンポーネント
-│   │   └── MetaTags.tsx # メタタグ管理コンポーネント
-│   ├── lib/           # ユーティリティ
-│   ├── pages/         # ページコンポーネント
-│   └── types/         # TypeScript型定義
+│   ├── components/      # Reactコンポーネント
+│   │   ├── Header.tsx   # ヘッダー（検索機能付き）
+│   │   ├── Footer.tsx   # フッター
+│   │   ├── PostCard.tsx # 記事カード
+│   │   ├── PostList.tsx # 記事リスト
+│   │   ├── MarkdownRenderer.tsx # Markdown描画
+│   │   ├── MetaTags.tsx # メタタグ管理
+│   │   └── ScrollToTop.tsx # スクロール制御
+│   ├── lib/            # ユーティリティ
+│   │   ├── posts.ts    # 記事データ管理
+│   │   └── tags.ts     # タグデータ管理
+│   ├── pages/          # ページコンポーネント
+│   │   ├── Home.tsx    # ホーム（検索機能付き）
+│   │   ├── PostDetail.tsx # 記事詳細
+│   │   ├── TagPosts.tsx # タグ別記事一覧
+│   │   └── NewPost.tsx # 新規記事作成
+│   ├── types/          # TypeScript型定義
+│   │   └── blog.ts     # ブログ関連の型
+│   ├── App.tsx         # アプリケーションエントリー
+│   ├── main.tsx        # Reactエントリーポイント
+│   └── routes.tsx      # ルーティング設定
+├── package.json        # パッケージ設定
+├── pnpm-lock.yaml     # 依存関係ロック
 ├── biome.json         # Biome設定
 ├── tailwind.config.js # TailwindCSS設定
+├── tsconfig.*.json    # TypeScript設定
 └── vite.config.ts     # Vite設定
 ```
 
@@ -65,30 +93,41 @@ blog/
   "title": "記事タイトル",
   "excerpt": "記事の概要",
   "content": "Markdown形式の本文",
-  "category": "カテゴリID",
-  "tags": ["タグ配列"],
+  "category": "カテゴリID（後方互換性のため残存）",
+  "tags": ["タグID配列"],
   "publishedAt": "YYYY-MM-DD",
-  "updatedAt": "YYYY-MM-DD（オプション）",
-  "thumbnail": "サムネイル画像URL（オプション）",
-  "readingTime": 読了時間（分）,
-  "ogpImage": "/ogp/スラッグ.png",
-  "ogpTitle": "OGP用タイトル",
-  "ogpDescription": "OGP用説明",
-  "keywords": ["SEO用キーワード"]
+  "updatedAt": "YYYY-MM-DD（オプション）"
 }
 ```
 
-現在は1記事のみ（`hello-world.json`）でシンプルな構成。
+**注意事項**：
+- `tags`は配列形式で複数のタグIDを指定可能
+- 旧`category`フィールドは自動的に`tags`配列に変換される
+- OGP画像は記事のslugに基づいて自動生成される（`/ogp/{slug}.png`）
+- 現在は1記事のみ（`hello-world.json`）でシンプルな構成
 
-### カテゴリ
+### タグシステム
 
-カテゴリは`src/lib/categories.ts`で定義されている：
+タグは`src/lib/tags.ts`で定義されている（カテゴリから移行）：
 
-- tech: テクノロジー
+**技術タグ**：
+- react: React
+- typescript: TypeScript
+- javascript: JavaScript
+- css: CSS
+- nodejs: Node.js
 - frontend: フロントエンド
+- backend: バックエンド
+- tech: テクノロジー
+
+**その他のタグ**：
 - career: キャリア
 - tools: ツール
 - thoughts: 雑記
+- tutorial: チュートリアル
+- tips: Tips
+
+各タグには表示用の色が設定されており、複数タグでの絞り込み検索が可能。
 
 ### ビルドとデプロイ
 
@@ -123,9 +162,67 @@ blog/
 - **生成タイミング**: CI/CDでのビルド時に自動生成
 - **生成コマンド**: `pnpm run generate-ogp`
 
-### コンテンツ幅
+### 主な機能
 
-すべてのコンテンツエリアは`max-w-3xl`（768px）に統一されている。
+1. **検索機能**
+   - Fuse.jsによるクライアントサイド全文検索
+   - タイトル、抜粋、本文、タグを横断検索
+   - 重み付けスコアリング（本文40%、タイトル30%、抜粋20%、タグ10%）
+   - 曖昧検索対応（しきい値0.3）
+
+2. **タグシステム**
+   - 記事に複数タグを設定可能
+   - タグ別記事一覧ページ
+   - OR検索・AND検索対応（API）
+
+3. **SEO/OGP対応**
+   - 動的なメタタグ生成（MetaTags コンポーネント）
+   - 記事ごとのOGP画像自動生成
+   - Twitter Card対応
+
+4. **新規記事作成ツール**
+   - GUIでの記事作成フォーム
+   - Markdownリアルタイムプレビュー
+   - Git操作コマンドの自動生成
+   - クリップボードコピー機能
+
+### デザイン仕様
+
+- **コンテンツ幅**: `max-w-3xl`（768px）に統一
+- **レスポンシブ対応**: TailwindCSSによる柔軟なレイアウト
+- **カラーテーマ**: モノクロベースのシンプルなデザイン
+- **インタラクション**: ホバーエフェクト、スムーズスクロール
+
+## 開発コマンド
+
+```bash
+# 依存関係のインストール
+pnpm install
+
+# 開発サーバー起動
+pnpm dev
+
+# ビルド
+pnpm build
+
+# ビルドプレビュー
+pnpm preview
+
+# コードフォーマット
+pnpm format
+
+# Lintチェック
+pnpm lint
+
+# Lint自動修正
+pnpm lint:fix
+
+# テスト実行
+pnpm test
+
+# OGP画像生成
+pnpm generate-ogp
+```
 
 ## TypeScript コーディング規約
 
@@ -135,6 +232,13 @@ blog/
 - コードのコメントとして、そのファイルがどういう仕様かを可能な限り明記する
 - 実装が内部状態を持たないとき、class による実装を避けて関数を優先する
 - 副作用を抽象するために、アダプタパターンで外部依存を抽象し、テストではインメモリなアダプタで処理する
+
+### Biome設定
+
+- インデント: スペース2文字
+- セミコロン: 必要時のみ（ASI優先）
+- クォート: シングルクォート（JSX属性はダブルクォート）
+- 行幅: 100文字
 
 ## Git 運用ルール
 

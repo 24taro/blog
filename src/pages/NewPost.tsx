@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import Header from '../components/Header'
 import Footer from '../components/Footer'
+import Header from '../components/Header'
 import MarkdownRenderer from '../components/MarkdownRenderer'
 import type { BlogPost } from '../types/blog'
 
@@ -13,21 +13,20 @@ export default function NewPost() {
   const [content, setContent] = useState('')
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [tagInput, setTagInput] = useState('')
-  const [thumbnail, setThumbnail] = useState('')
   const [publishedAt, setPublishedAt] = useState(new Date().toISOString().split('T')[0])
-  
+
   // ID生成（現在の日時を使用）
   const [postId] = useState(() => Date.now().toString())
-  
+
   // 読了時間の自動計算
-  
+
   // Git コマンド表示用の状態
   const [showGitCommand, setShowGitCommand] = useState(false)
   const [gitCommand, setGitCommand] = useState('')
-  
+
   // エディタの表示モード
   const [editorMode, setEditorMode] = useState<'write' | 'preview' | 'both'>('both')
-  
+
   // スラッグの自動生成
   useEffect(() => {
     if (title && !slug) {
@@ -40,7 +39,7 @@ export default function NewPost() {
       setSlug(generatedSlug)
     }
   }, [title, slug])
-  
+
   // 記事データの生成
   const generatePostData = useCallback((): BlogPost => {
     return {
@@ -51,51 +50,47 @@ export default function NewPost() {
       content,
       tags: selectedTags,
       publishedAt,
-      ...(thumbnail && { thumbnail }),
     }
-  }, [postId, slug, title, excerpt, content, selectedTags, publishedAt, thumbnail])
-  
+  }, [postId, slug, title, excerpt, content, selectedTags, publishedAt])
+
   // Git コマンドの生成
   const generateGitCommands = useCallback(() => {
     const postData = generatePostData()
     const fileName = `${slug}.json`
     const jsonContent = JSON.stringify(postData, null, 2)
-    
+
     // エスケープ処理
     const escapedJsonContent = jsonContent.replace(/'/g, "'\"'\"'")
     const escapedTitle = title.replace(/'/g, "'\"'\"'")
     const escapedExcerpt = excerpt.replace(/'/g, "'\"'\"'").replace(/\n/g, '\\n')
-    
+
     const commands = `git checkout -b add-post-${slug} && echo '${escapedJsonContent}' > posts/${fileName} && git add posts/${fileName} && git commit -m $'feat(posts): 新規記事「${escapedTitle}」を追加\\n\\n- ID: ${postId}\\n- スラッグ: ${slug}\\n- タグ: ${selectedTags.join(', ')}\\n- 公開日: ${publishedAt}' && git push -u origin add-post-${slug} && gh pr create --title "feat(posts): 新規記事「${escapedTitle}」を追加" --body $'## 概要\\n新しい記事を追加しました。\\n\\n### 記事情報\\n- **タイトル**: ${escapedTitle}\\n- **スラッグ**: ${slug}\\n- **タグ**: ${selectedTags.join(', ')}\\n- **公開日**: ${publishedAt}\\n\\n### 内容の概要\\n${escapedExcerpt}\\n\\n### プレビュー\\nマージ後、以下のURLで記事が確認できます：\\nhttps://[your-github-username].github.io/blog/posts/${slug}'`
-    
+
     setGitCommand(commands)
     setShowGitCommand(true)
   }, [generatePostData, slug, title, postId, selectedTags, publishedAt, excerpt])
-  
+
   // バリデーション
   const isValid = title && slug && excerpt && content && selectedTags.length > 0
-  
+
   return (
     <div className="min-h-screen bg-white">
       <Header />
-      
+
       <main className="py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="mb-6">
-            <Link
-              to="/"
-              className="inline-flex items-center text-gray-600 hover:text-gray-900"
-            >
+            <Link to="/" className="inline-flex items-center text-gray-600 hover:text-gray-900">
               ← ホームに戻る
             </Link>
           </div>
-          
+
           <h1 className="text-3xl font-bold text-gray-900 mb-8">新規投稿作成</h1>
-          
+
           {/* 基本情報入力フォーム */}
           <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
             <h2 className="text-xl font-semibold mb-4">記事の基本情報</h2>
-            
+
             <div className="space-y-4">
               <div>
                 <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
@@ -110,7 +105,7 @@ export default function NewPost() {
                   placeholder="記事のタイトルを入力"
                 />
               </div>
-              
+
               <div>
                 <label htmlFor="slug" className="block text-sm font-medium text-gray-700 mb-1">
                   スラッグ（URL） *
@@ -123,11 +118,9 @@ export default function NewPost() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="url-slug"
                 />
-                <p className="text-xs text-gray-500 mt-1">
-                  記事のURL: /posts/{slug || 'url-slug'}
-                </p>
+                <p className="text-xs text-gray-500 mt-1">記事のURL: /posts/{slug || 'url-slug'}</p>
               </div>
-              
+
               <div>
                 <label htmlFor="excerpt" className="block text-sm font-medium text-gray-700 mb-1">
                   概要 *
@@ -141,23 +134,12 @@ export default function NewPost() {
                   placeholder="記事の概要を入力（一覧ページに表示されます）"
                 />
               </div>
-              
+
               <div>
-                <label htmlFor="thumbnail" className="block text-sm font-medium text-gray-700 mb-1">
-                  サムネイル画像URL（任意）
-                </label>
-                <input
-                  id="thumbnail"
-                  type="text"
-                  value={thumbnail}
-                  onChange={(e) => setThumbnail(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="https://example.com/image.jpg"
-                />
-              </div>
-              
-              <div>
-                <label htmlFor="publishedAt" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="publishedAt"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
                   公開日 *
                 </label>
                 <input
@@ -168,7 +150,7 @@ export default function NewPost() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
-              
+
               <div>
                 <label htmlFor="tags" className="block text-sm font-medium text-gray-700 mb-1">
                   タグ * （カンマ区切りで複数入力可）
@@ -180,7 +162,10 @@ export default function NewPost() {
                   onChange={(e) => {
                     setTagInput(e.target.value)
                     // カンマ区切りでタグを分割
-                    const tags = e.target.value.split(',').map(tag => tag.trim()).filter(tag => tag)
+                    const tags = e.target.value
+                      .split(',')
+                      .map((tag) => tag.trim())
+                      .filter((tag) => tag)
                     setSelectedTags(tags)
                   }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -190,13 +175,13 @@ export default function NewPost() {
                   入力したタグ: {selectedTags.length > 0 ? selectedTags.join(', ') : 'なし'}
                 </p>
               </div>
-              
+
               <div className="flex items-center space-x-4 text-sm text-gray-600">
                 <span>ID: {postId}</span>
               </div>
             </div>
           </div>
-          
+
           {/* マークダウンエディタ */}
           <div className="bg-white border border-gray-200 rounded-lg">
             <div className="border-b border-gray-200 p-4">
@@ -207,8 +192,8 @@ export default function NewPost() {
                     type="button"
                     onClick={() => setEditorMode('write')}
                     className={`px-3 py-1 text-sm rounded ${
-                      editorMode === 'write' 
-                        ? 'bg-gray-800 text-white' 
+                      editorMode === 'write'
+                        ? 'bg-gray-800 text-white'
                         : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                     }`}
                   >
@@ -218,8 +203,8 @@ export default function NewPost() {
                     type="button"
                     onClick={() => setEditorMode('preview')}
                     className={`px-3 py-1 text-sm rounded ${
-                      editorMode === 'preview' 
-                        ? 'bg-gray-800 text-white' 
+                      editorMode === 'preview'
+                        ? 'bg-gray-800 text-white'
                         : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                     }`}
                   >
@@ -229,8 +214,8 @@ export default function NewPost() {
                     type="button"
                     onClick={() => setEditorMode('both')}
                     className={`px-3 py-1 text-sm rounded ${
-                      editorMode === 'both' 
-                        ? 'bg-gray-800 text-white' 
+                      editorMode === 'both'
+                        ? 'bg-gray-800 text-white'
                         : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                     }`}
                   >
@@ -239,8 +224,10 @@ export default function NewPost() {
                 </div>
               </div>
             </div>
-            
-            <div className={`grid ${editorMode === 'both' ? 'grid-cols-2' : 'grid-cols-1'} divide-x divide-gray-200`}>
+
+            <div
+              className={`grid ${editorMode === 'both' ? 'grid-cols-2' : 'grid-cols-1'} divide-x divide-gray-200`}
+            >
               {/* エディタ */}
               {(editorMode === 'write' || editorMode === 'both') && (
                 <div className="p-4">
@@ -252,7 +239,7 @@ export default function NewPost() {
                   />
                 </div>
               )}
-              
+
               {/* プレビュー */}
               {(editorMode === 'preview' || editorMode === 'both') && (
                 <div className="p-4">
@@ -267,7 +254,7 @@ export default function NewPost() {
               )}
             </div>
           </div>
-          
+
           {/* アクションボタン */}
           <div className="mt-6 flex justify-end space-x-4">
             <Link
@@ -289,7 +276,7 @@ export default function NewPost() {
               Gitコマンドを生成
             </button>
           </div>
-          
+
           {/* Git コマンド表示 */}
           {showGitCommand && (
             <div className="mt-8 bg-gray-900 text-white rounded-lg p-6">
@@ -316,7 +303,7 @@ export default function NewPost() {
           )}
         </div>
       </main>
-      
+
       <Footer />
     </div>
   )
